@@ -1,23 +1,26 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  min-height: 100vh;
   box-sizing: border-box;
+  background: #f5f5f5;
 }
 
 .app-header {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  background: transparent;
-  padding: 12px 20px;
+  justify-content: space-between;
+  background: #ffffff;
+  padding: 16px 24px;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
   height: 100px;
   box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e5e5e5;
 }
 
 
@@ -26,46 +29,66 @@ html, body {
   width: auto;
 }
 
-.main-container {
+.header-right {
   display: flex;
-  min-height: 100vh;
-  padding-top: 100px; 
-  overflow: hidden; 
-  height: 100vh;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-left: 12px;
 }
 
+.app-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: -0.3px;
+}
+
+.app-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #666666;
+  font-weight: 400;
+}
+
+.main-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 120px 24px 40px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 24px;
+}
 
 .task-sidebar {
-  width: 320px;
-  min-width: 320px;
-  background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
-  border-right: 2px solid #dee2e6;
-  padding: 24px;
-  overflow-y: auto;
+  width: 300px;
+  min-width: 260px;
+  background: #ffffff;
+  border-right: 1px solid #e5e5e5;
+  padding: 24px 20px;
+  box-shadow: 1px 0 3px rgba(0,0,0,0.05);
+  border-radius: 16px;
+  align-self: flex-start;
   position: sticky;
-  top: 100px;
-  height: calc(100vh - 100px);
-  box-shadow: 2px 0 12px rgba(0,0,0,0.08);
-}
-
-.sidebar-header {
-  margin-bottom: 28px;
-  padding-bottom: 18px;
-  border-bottom: 3px solid #007bff;
+  top: 120px; /* below fixed header */
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
 }
 
 .sidebar-header h3 {
   margin: 0 0 8px 0;
-  color: #2c3e50;
-  font-size: 20px;
-  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
 }
 
 .sidebar-header p {
   margin: 0;
-  color: #6c757d;
-  font-size: 14px;
-  font-weight: 500;
+  color: #666666;
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .sidebar-content {
@@ -92,7 +115,7 @@ html, body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #007bff, #00d4ff);
+  background: #ff6b35;
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -102,18 +125,18 @@ html, body {
 }
 
 .date-item:hover {
-  border-color: #007bff;
-  background: linear-gradient(135deg, #e7f3ff 0%, #f0f8ff 100%);
+  border-color: #ff6b35;
+  background: #fff5f2;
   transform: translateX(4px);
-  box-shadow: 0 4px 16px rgba(0,123,255,0.15);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.15);
 }
 
 .date-item.active {
-  border-color: #007bff;
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border-color: #ff6b35;
+  background: #ff6b35;
   color: white;
   transform: scale(1.02);
-  box-shadow: 0 8px 24px rgba(0,123,255,0.3);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 .date-item.active .task-count {
@@ -139,13 +162,14 @@ html, body {
 
 .no-tasks {
   text-align: center;
-  color: #28a745;
-  font-style: italic;
+  color: #666666;
+  font-style: normal;
   padding: 48px 24px;
-  background: rgba(40,167,69,0.1);
-  border: 2px dashed #28a745;
+  background: #fafafa;
+  border: 1px dashed #e5e5e5;
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 
@@ -177,9 +201,17 @@ html, body {
   justify-content: space-between;
   align-items: center;
   padding: 20px 25px;
-  border-bottom: 1px solid #eee;
-  background: #f8f9fa;
-  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid #e5e5e5;
+  background: #ffffff;
+  border-radius: 16px 16px 0 0;
+}
+
+.popup-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: -0.2px;
 }
 
 .close-btn {
@@ -198,8 +230,8 @@ html, body {
 }
 
 .close-btn:hover {
-  background: #dee2e6;
-  color: #333;
+  background: #f5f5f5;
+  color: #1a1a1a;
 }
 
 .popup-content {
@@ -207,11 +239,12 @@ html, body {
 }
 
 .edit-task-item {
-  background: #f8f9fa;
+  background: #fafafa;
   padding: 20px;
   margin-bottom: 20px;
-  border-radius: 8px;
-  border-left: 4px solid #007bff;
+  border-radius: 12px;
+  border-left: 4px solid #ff6b35;
+  border: 1px solid #e5e5e5;
 }
 
 .edit-task-item h4 {
@@ -221,36 +254,46 @@ html, body {
 
 .popup-actions {
   padding: 20px 25px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #e5e5e5;
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: flex-end;
+  background: #fafafa;
+  border-radius: 0 0 16px 16px;
 }
 
 
 .main-content {
   flex: 1;
-  padding: 32px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: calc(100vh - 100px);
-  background: #f5f7fa;
-  box-sizing: border-box;
 }
 
 .task-form {
-  background: rgba(255, 255, 255, 0.92);
-  padding: 20px;
-  border-radius: 12px;
+  background: #ffffff;
+  padding: 28px 32px 32px;
+  border-radius: 16px;
   width: 100%;          
-  max-width: 6000px;   
-  margin: 20px auto;   
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-  font-family: Arial, sans-serif;
+  max-width: 1120px;
+  margin: 16px auto 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   position: relative;
-  border: 1px solid #ccc;
+  border: 1px solid #e5e5e5;
   max-height: none;
   overflow: visible;
+}
+
+.task-form-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.task-form-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: -0.3px;
 }
 
 
@@ -267,7 +310,7 @@ html, body {
   justify-content: center;
   align-items: flex-start;
   height: 100vh;
-  padding-top: 40px;
+  padding-top: 24px;
   box-sizing: border-box;
   overflow: visible; 
 }
@@ -292,28 +335,65 @@ html, body {
 label {
   font-weight: 600;
   margin-bottom: 6px;
+  color: #1f2933;
 }
 
 input,
 select,
 textarea {
-  padding: 18px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d1d1;
   font-size: 14px;
   position: relative;
   z-index: 10;
+  font-family: inherit;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  color: #1a1a1a;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #999999;
+}
+
+input[type="file"] {
+  padding: 8px;
+  border: 1px dashed #d1d1d1;
+  background: #fafafa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type="file"]:hover {
+  border-color: #ff6b35;
+  background: #fff5f2;
+}
+
+input[type="file"]:focus {
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+  background: #ffffff;
 }
 
 .description-box {
-  height: 80px;
+  height: 110px;
   width: 100%; 
   resize: none;
   overflow: hidden;
 }
 
 .tasks-box {
-  height: 10px;
+  height: 70px;
   width: 100%; 
   resize: none;
   overflow: hidden;
@@ -321,8 +401,21 @@ textarea {
 
 small {
   font-size: 12px;
-  color: #666;
-  margin-top: 4px;
+  color: #666666;
+  margin-top: 6px;
+  display: block;
+}
+
+small a {
+  color: #ff6b35;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+small a:hover {
+  color: #ff5722;
+  text-decoration: underline;
 }
 
 .form-actions {
@@ -341,29 +434,70 @@ button {
 }
 
 .btn-secondary {
-  background: #17a2b8;
-  color: #fff;
+  background: #ffffff;
+  color: #666666;
+  border: 1px solid #d1d1d1;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #f5f5f5;
+  border-color: #b1b1b1;
+  color: #1a1a1a;
 }
 
 .btn-primary {
-  background: #28a745;
-  color: #fff;
+  background: #ff6b35;
+  color: #ffffff;
+  border: none;
+  transition: all 0.2s ease;
+  font-weight: 600;
 }
 
-button:hover {
-  opacity: 0.9;
+.btn-primary:hover {
+  background: #ff5722;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(255, 107, 53, 0.2);
 }
 
 
 .employee-card {
-  background: #fff;
-  padding: 15px 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  background: #ffffff;
+  padding: 24px 32px 28px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   margin: 10px auto;
   width: 100%;          
-  max-width: 6000px;   
+  max-width: 1120px;
   margin-top: 60px;
+  border: 1px solid #e5e5e5;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: -0.3px;
+}
+
+.card-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #666666;
+  font-weight: 400;
 }
 
 .employee-row {
@@ -387,11 +521,20 @@ button:hover {
 }
 
 .employee-field input {
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 12px 16px;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
   font-size: 14px;
   outline: none;
+  background: #fafafa;
+  color: #1a1a1a;
+  transition: border-color 0.2s ease;
+}
+
+.employee-field input:focus {
+  border-color: #ff6b35;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
 
@@ -429,14 +572,15 @@ button:hover {
 }
 
 .task-header {
-  padding: 8px 10px;
+  padding: 12px 16px;
   border-radius: 8px;
-  margin-bottom: 5px;
-  border: 1px solid #cbd5e1; 
+  margin-bottom: 16px;
+  border: 1px solid #e5e5e5; 
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-weight: 600;
+  font-weight: 500;
+  background: #fafafa;
 }
 
 .task-header label {
@@ -446,12 +590,18 @@ button:hover {
 }
 
 .task-header input[type="date"] {
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s ease;
+  background: #ffffff;
+}
+
+.task-header input[type="date"]:focus {
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
 .project-with-arrow {
@@ -470,52 +620,83 @@ button:hover {
 
 .toggle-arrow {
   font-size: 16px;
-  color: #333;
-  transition: transform 0.2s;
+  color: #ff6b35;
+  transition: transform 0.2s, color 0.2s;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .toggle-arrow:hover {
   transform: scale(1.1);
+  color: #ff5722;
 }
 
 .form-group label {
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #333;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #1a1a1a;
+  font-size: 14px;
+}
+
+.btn-danger {
+  background-color: #ffffff;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
 }
 
 .form-group select {
-  padding: 10px;
+  padding: 12px 16px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #d1d1d1;
   outline: none;
   font-size: 14px;
   width: 100%;
   box-sizing: border-box;
+  background: #ffffff;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.form-group select:focus {
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
 
 .btn-exit {
-  background-color: #d9534f;   
-  color: #fff;
-  border: none;
+  background-color: #ffffff;   
+  color: #666666;
+  border: 1px solid #d1d1d1;
   padding: 10px 18px;
   border-radius: 8px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-exit:hover {
-  background-color: #c9302c;
-  transform: scale(1.05);
+  background-color: #f5f5f5;
+  border-color: #b1b1b1;
+  color: #1a1a1a;
 }
 
 .btn-exit:active {
-  background-color: #a52a2a;
-  transform: scale(0.98);
+  transform: translateY(1px);
 }
 
 .form-actions .btn-exit {
@@ -556,9 +737,9 @@ button:hover {
 
 .custom-alert-box button {
   padding: 0.75rem 1.5rem;
-  background-color: #2563eb;
+  background-color: #ff6b35;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   color: white;
   font-weight: 600;
   cursor: pointer;
@@ -566,9 +747,9 @@ button:hover {
 }
 
 .custom-alert-box button:hover {
-  background-color: #1d4ed8;
+  background-color: #ff5722;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 .btn-group {
@@ -590,25 +771,27 @@ button:hover {
 }
 
 .btn-yes {
-  background: #059669;
+  background: #ff6b35;
   color: white;
 }
 
 .btn-yes:hover {
-  background: #047857;
+  background: #ff5722;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 .btn-no {
-  background: #dc2626;
-  color: white;
+  background: #ffffff;
+  color: #666666;
+  border: 1px solid #d1d1d1;
 }
 
 .btn-no:hover {
-  background: #b91c1c;
+  background: #f5f5f5;
+  border-color: #b1b1b1;
+  color: #1a1a1a;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
 }
 
 .readonly-label {
