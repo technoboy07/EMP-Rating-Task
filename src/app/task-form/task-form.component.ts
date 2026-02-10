@@ -159,7 +159,7 @@ export class TaskFormComponent implements OnInit {
   }
 
   loadEmployeeDetails(employeeId: string): void {
-    this.http.get<any>(`https://192.168.0.22:8243/employee/api/${employeeId}`)
+    this.http.get<any>(`jdbc:postgresql://dpg-d65hqnu3jp1c73ar8o0g-a.singapore-postgres.render.com/rumango/employee/api/${employeeId}`)
       .subscribe({
         next: (res) => {
           this.employeeName = res.employeeName;
@@ -174,7 +174,7 @@ export class TaskFormComponent implements OnInit {
     const currentDate = new Date();
     const yearMonth = currentDate.toISOString().slice(0, 7); 
     
-    this.http.get<any>(`https://192.168.0.22:8243/employee/api/v1/tasks/withoutrating/${employeeId}`)
+    this.http.get<any>(`jdbc:postgresql://dpg-d65hqnu3jp1c73ar8o0g-a.singapore-postgres.render.com/rumango/employee/api/v1/tasks/withoutrating/${employeeId}`)
       .subscribe({
         next: (res) => {
           this.unratedTasks = res.tasks || [];
@@ -261,7 +261,7 @@ export class TaskFormComponent implements OnInit {
     
     const promise =
     this.http.put<any>(
-     `https://192.168.0.22:8243/employee/api/v1/tasks/update/${task.taskId}`,
+     `jdbc:postgresql://dpg-d65hqnu3jp1c73ar8o0g-a.singapore-postgres.render.com/rumango/employee/api/v1/tasks/update/${task.taskId}`,
       payload,
       {
         headers: {
@@ -299,7 +299,7 @@ private refreshUnratedTasks(): void {
   if (!this.employeeId) return;
   
   const cacheBuster = new Date().getTime();
-  this.http.get<any>(`https://192.168.0.22:8243/employee/api/v1/tasks/withoutrating/${this.employeeId}?_t=${cacheBuster}`)
+  this.http.get<any>(`jdbc:postgresql://dpg-d65hqnu3jp1c73ar8o0g-a.singapore-postgres.render.com/rumango/employee/api/v1/tasks/withoutrating/${this.employeeId}?_t=${cacheBuster}`)
     .subscribe({
       next: (res) => {
         this.unratedTasks = res.tasks || [];
@@ -328,7 +328,7 @@ private refreshUnratedTasks(): void {
     };
 
     this.http.put<any>(
-      `https://192.168.0.22:8243/employee/api/v1/tasks/update/${taskId}`,
+      `jdbc:postgresql://dpg-d65hqnu3jp1c73ar8o0g-a.singapore-postgres.render.com/rumango/employee/api/v1/tasks/update/${taskId}`,
       payload,
       {
         headers: {
@@ -365,7 +365,7 @@ private refreshUnratedTasks(): void {
     });
 
     this.http.post<any>(
-      `https://192.168.0.22:8243/employee/api/v1/tasks/submit/${this.employeeId}`,
+      `jdbc:postgresql://dpg-d65hqnu3jp1c73ar8o0g-a.singapore-postgres.render.com/rumango/employee/api/v1/tasks/submit/${this.employeeId}`,
       formData,
       {
         headers: {
