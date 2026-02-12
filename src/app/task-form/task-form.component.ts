@@ -68,11 +68,6 @@ teamLeads: string[] = [];
   }
 
   ngOnInit(): void {
-    // ❗ Skip all side-effects when running on the server (SSR / prerender)
-    if (!this.isBrowser) {
-      return;
-    }
-  
     this.activatedRouter.queryParamMap.subscribe(params => {
       const empIdFromUrl = params.get('employeeId');
       let storedEmpId: string | null = null;
@@ -93,37 +88,33 @@ teamLeads: string[] = [];
         this.loadEmployeeDetails(storedEmpId);
         this.loadCurrentMonthUnratedTasks(storedEmpId);
       } else {
-        console.warn('⚠️ No employeeId found in URL or localStorage!');
+        console.warn(' No employeeId found in URL or localStorage!');
       }
     });
-  
-    // If you added dynamic TL loading, keep it browser-only too
-    // this.loadTeamLeads();
-  }
   
     // ✅ load TL list from backend once
     this.loadTeamLeads();
   }
 
   private loadTeamLeads(): void {
-    this.http.get<any[]>(`${this.API_BASE_URL}/api/fetchAll`)
-      .subscribe({
-        next: (res) => {
-          // res is a list of Employee entities with employeeRole
-          this.teamLeads = (res || [])
-            .filter(emp => {
-              const role = (emp.employeeRole || emp.role || '').toLowerCase();
-              return role.includes('team lead'); // matches "Team Lead", "TEAM LEAD", etc.
-            })
-            .map(emp => emp.employeeName)
-            .sort();
-          console.log('Loaded team leads:', this.teamLeads);
-        },
-        error: (err) => {
-          console.error('Error loading team leads:', err);
-        }
-      });
-  }
+  this.http.get<any[]>(`${this.API_BASE_URL}/api/fetchAll`)
+    .subscribe({
+      next: (res) => {
+        // res is a list of Employee entities with employeeRole
+        this.teamLeads = (res || [])
+          .filter(emp => {
+            const role = (emp.employeeRole || emp.role || '').toLowerCase();
+            return role.includes('team lead'); // matches "Team Lead", "TEAM LEAD", etc.
+          })
+          .map(emp => emp.employeeName)
+          .sort();
+        console.log('Loaded team leads:', this.teamLeads);
+      },
+      error: (err) => {
+        console.error('Error loading team leads:', err);
+      }
+    });
+}
 
   createTask(isFirst: boolean = false): FormGroup {
     return this.fb.group({
