@@ -68,6 +68,11 @@ teamLeads: string[] = [];
   }
 
   ngOnInit(): void {
+    // ❗ Skip all side-effects when running on the server (SSR / prerender)
+    if (!this.isBrowser) {
+      return;
+    }
+  
     this.activatedRouter.queryParamMap.subscribe(params => {
       const empIdFromUrl = params.get('employeeId');
       let storedEmpId: string | null = null;
@@ -91,6 +96,10 @@ teamLeads: string[] = [];
         console.warn('⚠️ No employeeId found in URL or localStorage!');
       }
     });
+  
+    // If you added dynamic TL loading, keep it browser-only too
+    // this.loadTeamLeads();
+  }
   
     // ✅ load TL list from backend once
     this.loadTeamLeads();
