@@ -38,28 +38,11 @@ export class TaskFormComponent implements OnInit {
     "Website"
   ];
 
-  teamLeads: string[] = [
-    "Sakthivel M",
-    "Vidyashree Acharya",
-    "Parameswar Parida",
-    "Gayathri Ramaraj",
-    "Srihari G",
-    "Abhilash Kar",
-    "Vankara Pavan Sai Kishore Naidu",
-    "Abhishek Thakur",
-    "Srinivasan T",
-    "Senthil Selvaraj",
-    "Abhisheik V",
-    "Mandhakalla Usha",
-    "Manoranjan Nayak",
-    "Shabaz Pasha",
-    "Surya Prakash Das",
-    "Yash Dipt",
-    "Calvin_Clifford",
-    "Piyush_Merchant",
-    "Alok_Kumar_Mohanty",
-    "Bhagabati_Prasad_Panda"
-  ];
+// Base URL for backend
+private readonly API_BASE_URL = 'https://emp-rating-backend.onrender.com';
+
+// Filled dynamically from backend
+teamLeads: string[] = [];
 
   alertMessage: string = '';
   showAlert: boolean = false;
@@ -88,26 +71,49 @@ export class TaskFormComponent implements OnInit {
     this.activatedRouter.queryParamMap.subscribe(params => {
       const empIdFromUrl = params.get('employeeId');
       let storedEmpId: string | null = null;
-
+  
       if (this.isBrowser) {
         storedEmpId = localStorage.getItem('employeeId');
       }
-
-     if (empIdFromUrl) {
-      this.employeeId = empIdFromUrl;
-      if (this.isBrowser) {
-      localStorage.setItem('employeeId', empIdFromUrl);
-      }
-      this.loadEmployeeDetails(empIdFromUrl);
-      this.loadCurrentMonthUnratedTasks(empIdFromUrl as string);
+  
+      if (empIdFromUrl) {
+        this.employeeId = empIdFromUrl;
+        if (this.isBrowser) {
+          localStorage.setItem('employeeId', empIdFromUrl);
+        }
+        this.loadEmployeeDetails(empIdFromUrl);
+        this.loadCurrentMonthUnratedTasks(empIdFromUrl as string);
       } else if (storedEmpId) {
         this.employeeId = storedEmpId;
         this.loadEmployeeDetails(storedEmpId);
-       this.loadCurrentMonthUnratedTasks(storedEmpId);
+        this.loadCurrentMonthUnratedTasks(storedEmpId);
       } else {
         console.warn('⚠️ No employeeId found in URL or localStorage!');
       }
     });
+  
+    // ✅ load TL list from backend once
+    this.loadTeamLeads();
+  }
+
+  private loadTeamLeads(): void {
+    this.http.get<any[]>(`${this.API_BASE_URL}/api/fetchAll`)
+      .subscribe({
+        next: (res) => {
+          // res is a list of Employee entities with employeeRole
+          this.teamLeads = (res || [])
+            .filter(emp => {
+              const role = (emp.employeeRole || emp.role || '').toLowerCase();
+              return role.includes('team lead'); // matches "Team Lead", "TEAM LEAD", etc.
+            })
+            .map(emp => emp.employeeName)
+            .sort();
+          console.log('Loaded team leads:', this.teamLeads);
+        },
+        error: (err) => {
+          console.error('Error loading team leads:', err);
+        }
+      });
   }
 
   createTask(isFirst: boolean = false): FormGroup {
