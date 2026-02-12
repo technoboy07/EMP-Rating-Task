@@ -68,6 +68,11 @@ teamLeads: string[] = [];
   }
 
   ngOnInit(): void {
+    if (!this.isBrowser) {
+      // Skip all side‑effects on the server (SSR/prerender)
+      return;
+    }
+  
     this.activatedRouter.queryParamMap.subscribe(params => {
       const empIdFromUrl = params.get('employeeId');
       let storedEmpId: string | null = null;
@@ -82,39 +87,53 @@ teamLeads: string[] = [];
           localStorage.setItem('employeeId', empIdFromUrl);
         }
         this.loadEmployeeDetails(empIdFromUrl);
-        this.loadCurrentMonthUnratedTasks(empIdFromUrl as string);
+        this.loadCurrentMonthUnratedTasks(empIdFromUrl);
       } else if (storedEmpId) {
         this.employeeId = storedEmpId;
         this.loadEmployeeDetails(storedEmpId);
         this.loadCurrentMonthUnratedTasks(storedEmpId);
       } else {
-        console.warn(' No employeeId found in URL or localStorage!');
+        console.warn('⚠️ No employeeId found in URL or localStorage!');
       }
     });
   
-    // ✅ load TL list from backend once
+    // ✅ Make sure this is inside the browser guard
     this.loadTeamLeads();
   }
 
   private loadTeamLeads(): void {
-  this.http.get<any[]>(`${this.API_BASE_URL}/api/fetchAll`)
-    .subscribe({
-      next: (res) => {
-        // res is a list of Employee entities with employeeRole
-        this.teamLeads = (res || [])
-          .filter(emp => {
+    console.log('🔍 Loading team leads from backend...');
+  
+    this.http.get<any[]>(`${this.API_BASE_URL}/api/fetchAll`)
+      .subscribe({
+        next: (res) => {
+          console.log('✅ /api/fetchAll response:', res);
+  
+          const employees = res || [];
+  
+          // Filter by role containing both "team" and "lead" (handles "Team Lead", "TEAM LEAD RATING", etc.)
+          const tlEmployees = employees.filter(emp => {
             const role = (emp.employeeRole || emp.role || '').toLowerCase();
-            return role.includes('team lead'); // matches "Team Lead", "TEAM LEAD", etc.
-          })
-          .map(emp => emp.employeeName)
-          .sort();
-        console.log('Loaded team leads:', this.teamLeads);
-      },
-      error: (err) => {
-        console.error('Error loading team leads:', err);
-      }
-    });
-}
+            return role.includes('team') && role.includes('lead');
+          });
+  
+          console.log('Filtered TL employees:', tlEmployees);
+  
+          // If filter gives nothing (maybe roles not set yet), fall back to ALL employees so you can at least see data
+          const source = tlEmployees.length > 0 ? tlEmployees : employees;
+  
+          this.teamLeads = source
+            .map(emp => emp.employeeName)
+            .filter(name => !!name)
+            .sort();
+  
+          console.log('Final teamLeads list used in dropdown:', this.teamLeads);
+        },
+        error: (err) => {
+          console.error('❌ Error loading team leads:', err);
+        }
+      });
+  }
 
   createTask(isFirst: boolean = false): FormGroup {
     return this.fb.group({
