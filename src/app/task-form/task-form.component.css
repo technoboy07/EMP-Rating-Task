@@ -102,11 +102,14 @@ html, body {
   background: white;
   border-radius: 12px;
   cursor: pointer;
-  border: 2px solid #eee; /* Light border for structure */
+  /* Change transparent to your orange color */
+  border: 2px solid #ff6b35; 
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  z-index: 1; /* Establish a stacking context */
+  z-index: 1;
+  /* Optional: keeps text orange to match the outline initially */
+  color: #ff6b35; 
 }
 
 .date-item::before {
