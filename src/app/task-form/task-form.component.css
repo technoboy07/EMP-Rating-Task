@@ -102,10 +102,11 @@ html, body {
   background: white;
   border-radius: 12px;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 2px solid #eee; /* Light border for structure */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  z-index: 1; /* Establish a stacking context */
 }
 
 .date-item::before {
@@ -113,28 +114,31 @@ html, body {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 3px;
+  width: 100%;
+  height: 100%; /* Full height */
   background: #ff6b35;
-  transform: scaleX(0);
+  transform: scaleY(0); /* Start flat at the top */
+  transform-origin: top;
   transition: transform 0.3s ease;
+  z-index: -1; /* Stay behind the text */
+}
+
+/* Hover State: The Fill Effect */
+.date-item:hover {
+  color: white; /* Make text white when background turns orange */
+  border-color: #ff6b35;
+  transform: translateX(4px);
 }
 
 .date-item:hover::before {
-  transform: scaleX(1);
+  transform: scaleY(1); /* Fill the entire container */
 }
 
-.date-item:hover {
-  border-color: #ff6b35;
-  background: #fff5f2;
-  transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.15);
-}
-
+/* Active State: Stay Full Orange */
 .date-item.active {
-  border-color: #ff6b35;
   background: #ff6b35;
   color: white;
+  border-color: #ff6b35;
   transform: scale(1.02);
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
