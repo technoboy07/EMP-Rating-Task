@@ -38,11 +38,28 @@ export class TaskFormComponent implements OnInit {
     "Website"
   ];
 
-// Base URL for backend
-private readonly API_BASE_URL = 'https://emp-rating-backend.onrender.com';
-
-// Filled dynamically from backend
-teamLeads: string[] = [];
+  teamLeads: string[] = [
+    "Sakthivel M",
+    "Vidyashree Acharya",
+    "Parameswar Parida",
+    "Gayathri Ramaraj",
+    "Srihari G",
+    "Abhilash Kar",
+    "Vankara Pavan Sai Kishore Naidu",
+    "Abhishek Thakur",
+    "Srinivasan T",
+    "Senthil Selvaraj",
+    "Abhisheik V",
+    "Mandhakalla Usha",
+    "Manoranjan Nayak",
+    "Shabaz Pasha",
+    "Surya Prakash Das",
+    "Yash Dipt",
+    "Calvin_Clifford",
+    "Piyush_Merchant",
+    "Alok_Kumar_Mohanty",
+    "Bhagabati_Prasad_Panda"
+  ];
 
   alertMessage: string = '';
   showAlert: boolean = false;
@@ -68,71 +85,29 @@ teamLeads: string[] = [];
   }
 
   ngOnInit(): void {
-    if (!this.isBrowser) {
-      // Skip all side‑effects on the server (SSR/prerender)
-      return;
-    }
-  
     this.activatedRouter.queryParamMap.subscribe(params => {
       const empIdFromUrl = params.get('employeeId');
       let storedEmpId: string | null = null;
-  
+
       if (this.isBrowser) {
         storedEmpId = localStorage.getItem('employeeId');
       }
-  
-      if (empIdFromUrl) {
-        this.employeeId = empIdFromUrl;
-        if (this.isBrowser) {
-          localStorage.setItem('employeeId', empIdFromUrl);
-        }
-        this.loadEmployeeDetails(empIdFromUrl);
-        this.loadCurrentMonthUnratedTasks(empIdFromUrl);
+
+     if (empIdFromUrl) {
+      this.employeeId = empIdFromUrl;
+      if (this.isBrowser) {
+      localStorage.setItem('employeeId', empIdFromUrl);
+      }
+      this.loadEmployeeDetails(empIdFromUrl);
+      this.loadCurrentMonthUnratedTasks(empIdFromUrl as string);
       } else if (storedEmpId) {
         this.employeeId = storedEmpId;
         this.loadEmployeeDetails(storedEmpId);
-        this.loadCurrentMonthUnratedTasks(storedEmpId);
+       this.loadCurrentMonthUnratedTasks(storedEmpId);
       } else {
         console.warn('⚠️ No employeeId found in URL or localStorage!');
       }
     });
-  
-    // ✅ Make sure this is inside the browser guard
-    this.loadTeamLeads();
-  }
-
-  private loadTeamLeads(): void {
-    console.log('🔍 Loading team leads from backend...');
-  
-    this.http.get<any[]>(`${this.API_BASE_URL}/api/fetchAll`)
-      .subscribe({
-        next: (res) => {
-          console.log('✅ /api/fetchAll response:', res);
-  
-          const employees = res || [];
-  
-          // Filter by role containing both "team" and "lead" (handles "Team Lead", "TEAM LEAD RATING", etc.)
-          const tlEmployees = employees.filter(emp => {
-            const role = (emp.employeeRole || emp.role || '').toLowerCase();
-            return role.includes('team') && role.includes('lead');
-          });
-  
-          console.log('Filtered TL employees:', tlEmployees);
-  
-          // If filter gives nothing (maybe roles not set yet), fall back to ALL employees so you can at least see data
-          const source = tlEmployees.length > 0 ? tlEmployees : employees;
-  
-          this.teamLeads = source
-            .map(emp => emp.employeeName)
-            .filter(name => !!name)
-            .sort();
-  
-          console.log('Final teamLeads list used in dropdown:', this.teamLeads);
-        },
-        error: (err) => {
-          console.error('❌ Error loading team leads:', err);
-        }
-      });
   }
 
   createTask(isFirst: boolean = false): FormGroup {
