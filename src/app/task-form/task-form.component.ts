@@ -38,7 +38,7 @@ export class TaskFormComponent implements OnInit {
     "Website"
   ];
 
-  teamLeads: string[] = [
+  private readonly hardcodedTeamLeads: string[] = [
     "Sakthivel M",
     "Vidyashree Acharya",
     "Parameswar Parida",
@@ -60,6 +60,42 @@ export class TaskFormComponent implements OnInit {
     "Alok_Kumar_Mohanty",
     "Bhagabati_Prasad_Panda"
   ];
+
+  teamLeads: string[] = [...this.hardcodedTeamLeads]; // Initialize with hardcoded list
+
+// Add this method to load team leads dynamically
+loadTeamLeads(): void {
+  if (!this.isBrowser) {
+    return;
+  }
+  
+  this.http.get<string[]>(`https://emp-rating-backend.onrender.com/api/teamleads/names`)
+    .subscribe({
+      next: (dynamicLeads) => {
+        // Merge hardcoded and dynamic lists, removing duplicates
+        const allLeads = new Set<string>();
+        
+        // Add hardcoded leads first
+        this.hardcodedTeamLeads.forEach(lead => allLeads.add(lead));
+        
+        // Add dynamic leads
+        dynamicLeads.forEach(lead => {
+          if (lead && lead.trim()) {
+            allLeads.add(lead.trim());
+          }
+        });
+        
+        // Convert Set to sorted array
+        this.teamLeads = Array.from(allLeads).sort();
+        console.log('✅ Team leads loaded:', this.teamLeads);
+      },
+      error: (err) => {
+        console.error('⚠️ Error loading team leads, using hardcoded list only:', err);
+        // Keep the hardcoded list if API fails
+        this.teamLeads = [...this.hardcodedTeamLeads];
+      }
+    });
+}
 
   alertMessage: string = '';
   showAlert: boolean = false;
@@ -85,31 +121,39 @@ export class TaskFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    
+    // Load team leads dynamically (merges with hardcoded list)
+    this.loadTeamLeads();
+    
     this.activatedRouter.queryParamMap.subscribe(params => {
       const empIdFromUrl = params.get('employeeId');
       let storedEmpId: string | null = null;
-
+  
       if (this.isBrowser) {
         storedEmpId = localStorage.getItem('employeeId');
       }
-
-     if (empIdFromUrl) {
-      this.employeeId = empIdFromUrl;
-      if (this.isBrowser) {
-      localStorage.setItem('employeeId', empIdFromUrl);
-      }
-      this.loadEmployeeDetails(empIdFromUrl);
-      this.loadCurrentMonthUnratedTasks(empIdFromUrl as string);
+  
+      if (empIdFromUrl) {
+        this.employeeId = empIdFromUrl;
+        if (this.isBrowser) {
+          localStorage.setItem('employeeId', empIdFromUrl);
+        }
+        
+        this.loadEmployeeDetails(empIdFromUrl);
+        this.loadCurrentMonthUnratedTasks(empIdFromUrl as string);
       } else if (storedEmpId) {
         this.employeeId = storedEmpId;
         this.loadEmployeeDetails(storedEmpId);
-       this.loadCurrentMonthUnratedTasks(storedEmpId);
+        this.loadCurrentMonthUnratedTasks(storedEmpId);
       } else {
         console.warn('⚠️ No employeeId found in URL or localStorage!');
       }
     });
   }
-
+  
   createTask(isFirst: boolean = false): FormGroup {
     return this.fb.group({
       taskId:[null],
